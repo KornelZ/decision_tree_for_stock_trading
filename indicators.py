@@ -6,6 +6,7 @@ def get_SMA(data, start, end):
 
 
 def get_EMA(data, start, end):
+
     n = end - start
     alpha = 2 / (n + 1)
     weighted_sum = data[start]
@@ -31,12 +32,14 @@ def get_MACD(data, start, end):
     signal_line_length = 9
 
     for i in range(start, end):
-        short_term_EMA.insert(get_EMA(data, i, short_term_length))
-        long_term_EMA.insert(get_EMA(data, i, long_term_length))
-        macd.insert(long_term_EMA[i] - short_term_EMA[i])
+        if i + long_term_length < end:
+            short_term_EMA.append(get_EMA(data, i, i + short_term_length))
+            long_term_EMA.append(get_EMA(data, i, i + long_term_length))
+            macd.append(long_term_EMA[i] - short_term_EMA[i])
 
-    for i in range(start, end):
-        signal_line.insert(get_EMA(macd, i, signal_line_length))
+    for i in range(0, len(macd)):
+        if i + signal_line_length < len(macd):
+            signal_line.append(get_EMA(macd, i, i + signal_line_length))
 
     return short_term_EMA, long_term_EMA, signal_line
 
@@ -56,7 +59,7 @@ def get_K_stochastic(lower, higher, closing, length, end):
     stochastic = []
     for i in range(end - length, end):
         k = 100 * (closing[i] - minLower) / (maxHigher - minLower)
-        stochastic.insert(k)
+        stochastic.append(k)
 
     return stochastic
 
