@@ -1,9 +1,7 @@
-import numpy as np
 import pandas as pd
-import os
 from indicators import get_SMA,get_EMA,get_MACD,get_K_stochastic,get_D_of_K_stochastic, std_dev, get_bollinger_bands, get_keltner_channel
 
-DATA_STOCK = r"C:\Users\aleks\Desktop\doto_munink\apple_stock.csv"
+DATA_STOCK = r"apple_stock.csv"
 
 def load_data(path : str):
     data = pd.read_csv(path, index_col=0)

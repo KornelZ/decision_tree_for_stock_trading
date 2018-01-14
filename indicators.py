@@ -41,7 +41,7 @@ def get_MACD(data, start, end):
         if i + signal_line_length < len(macd):
             signal_line.append(get_EMA(macd, i, i + signal_line_length))
 
-    return short_term_EMA, long_term_EMA, signal_line
+    return short_term_EMA, long_term_EMA, signal_line, macd
 
 
 def get_low(lower, start, end):
