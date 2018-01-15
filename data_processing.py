@@ -1,4 +1,4 @@
-from indicators_test import load_data
+import pandas as pd
 from indicators import get_MACD, get_K_stochastic, get_D_of_K_stochastic, get_bollinger_bands
 from attribute_binarization import Binarizer
 
@@ -6,6 +6,10 @@ from attribute_binarization import Binarizer
 
 K_STOCHASTIC_INTERVAL = 20
 BOLLINGER_Q = 2
+
+def load_data(path : str):
+    data = pd.read_csv(path, index_col=0)
+    return data
 
 def preprocess_data(path : str):
 
@@ -59,7 +63,8 @@ def preprocess_data(path : str):
 
     bin_bollinger = []
     for i in range(len(bollinger_band_list)):
-        bin_bollinger.append(binarizer.bin_bollinger(bollinger_band_list[i][0], bollinger_band_list[i][2], \
+        if i < len(data["close"]):
+            bin_bollinger.append(binarizer.bin_bollinger(bollinger_band_list[i][0], bollinger_band_list[i][2], \
                                                      data["close"][i]))
     attribute_matrix = []
     macd_attr = list(map(list, zip(*bin_macd)))
@@ -74,9 +79,6 @@ def preprocess_data(path : str):
     attribute_matrix.append(bollinger_attr[0])
     attribute_matrix.append(bollinger_attr[1])
     min_length = min(map(len, attribute_matrix))
-    for i in range(len(attribute_matrix)):
-        print(len(attribute_matrix[i]))
-
     result_matrix = []
     for i in range(min_length):
         tmp = []
