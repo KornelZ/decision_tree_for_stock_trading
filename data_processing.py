@@ -58,8 +58,10 @@ def preprocess_data(path : str):
         bin_stochastic.append(binarizer.bin_k_stochastic(combined_k_stochastic[i], d_of_k_list[i], d_of_k_list[i + 1]))
 
     bin_bollinger = []
+
     for i in range(len(bollinger_band_list)):
-        bin_bollinger.append(binarizer.bin_bollinger(bollinger_band_list[i][0], bollinger_band_list[i][2], \
+        if i < len(data["close"]):
+            bin_bollinger.append(binarizer.bin_bollinger(bollinger_band_list[i][0], bollinger_band_list[i][2], \
                                                      data["close"][i]))
     attribute_matrix = []
     macd_attr = list(map(list, zip(*bin_macd)))
@@ -74,8 +76,6 @@ def preprocess_data(path : str):
     attribute_matrix.append(bollinger_attr[0])
     attribute_matrix.append(bollinger_attr[1])
     min_length = min(map(len, attribute_matrix))
-    for i in range(len(attribute_matrix)):
-        print(len(attribute_matrix[i]))
 
     result_matrix = []
     for i in range(min_length):
