@@ -58,7 +58,7 @@ def get_K_stochastic(lower, higher, closing, length, end):
     maxHigher = get_high(higher, end - length, end)
     stochastic = []
     for i in range(end - length, end):
-        k = 100 * (closing[i] - minLower) / (maxHigher - minLower)
+        k = 100 * (closing[i] - minLower) / ((maxHigher - minLower) + 1)
         stochastic.append(k)
 
     return stochastic
