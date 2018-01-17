@@ -9,32 +9,59 @@ COLUMNS = ["MACD_SELL", "MACD_BUY", "EMA(C)", "EMA(V)",
 TARGETS = ["BUY", "SELL", "NEUTRAL"]
 
 
-def main(data_path, test_size):
-    matrix = preprocess_data(data_path)
+def get_frame(path):
+    matrix = preprocess_data(path)
     label_matrix(matrix)
-    data_frame = pd.DataFrame(matrix, columns=COLUMNS)
-    df_train = data_frame.iloc[test_size:, :]
-    df_test = data_frame.iloc[:test_size, :]
-    features = list(df_train.columns[:7])
-    y = df_train["ACTION"]
-    x = df_train[features]
-    dt = DecisionTreeClassifier(min_samples_split=25, random_state=99, criterion="entropy")
+    return pd.DataFrame(matrix, columns=COLUMNS)
+
+
+def train(train_frame, features):
+    y = train_frame["ACTION"]
+    x = train_frame[features]
+    dt = DecisionTreeClassifier(min_samples_split=100, random_state=99, criterion="entropy")
     dt.fit(x, y)
-    get_code(dt, features, TARGETS)
-    y_test = df_test["ACTION"]
-    x_test = df_test[features]
+    return dt
+
+
+def classify(test_frame, features, dt: DecisionTreeClassifier):
+    y_test = test_frame["ACTION"]
+    x_test = test_frame[features]
     return dt.score(x_test, y_test)
+
+
+def main(train_path, train_size, test_path, test_size, display_tree=True):
+    train_frame = get_frame(train_path)
+    df_train = train_frame.tail(train_size)
+    test_frame = get_frame(test_path)
+    df_test = test_frame.head(test_size)
+    features = list(df_train.columns[:7])
+
+    dt = train(df_train, features)
+
+    if display_tree:
+        get_code(dt, features, TARGETS)
+
+    return classify(df_test, features, dt)
+
 
 def main_loop():
     end = False
-    while end == False:
-        path = input('please type in the dataset path:')
-        test_size = int(input('please type in the test dataset size'))
-        result = main(path,test_size)
+    while not end:
+        try:
+            train_path = input('please type in the training dataset path:')
+            train_size = int(input('please type in the training dataset size (last n rows)'))
+            test_path = input('please type in the test dataset path:')
+            test_size = int(input('please type in the test dataset size (first n rows)'))
+            result = main(train_path, train_size, test_path, test_size)
+        except:
+            print("Invalid input")
+            continue
+
         print(result)
         finish = input('if you want to quit press "q"')
         if finish == "q":
             end = True;
+
 
 if __name__ == "__main__":
     main_loop()

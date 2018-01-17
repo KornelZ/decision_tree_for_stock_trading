@@ -3,7 +3,6 @@ from indicators import get_MACD, get_K_stochastic, get_D_of_K_stochastic, get_bo
 from attribute_binarization import Binarizer
 
 
-
 K_STOCHASTIC_INTERVAL = 20
 BOLLINGER_Q = 2
 
@@ -21,14 +20,10 @@ def preprocess_data(path : str):
     k_stochastic_list = []
     d_of_k_list = []
     bollinger_band_list = []
-    j = 0
     while i + K_STOCHASTIC_INTERVAL < data["low"].shape[0]:
         k_stochastic_list.append(get_K_stochastic(data["low"].tolist(), data["high"].tolist(), \
                                                   data["close"].tolist(), K_STOCHASTIC_INTERVAL, i + K_STOCHASTIC_INTERVAL))
-        bollinger_band_list.append(get_bollinger_bands(data["close"].tolist(), K_STOCHASTIC_INTERVAL, \
-                                                   i + K_STOCHASTIC_INTERVAL, BOLLINGER_Q))
         i = i + K_STOCHASTIC_INTERVAL
-        j += 1
 
     i = 0
     while i + K_STOCHASTIC_INTERVAL < data["low"].shape[0]:
