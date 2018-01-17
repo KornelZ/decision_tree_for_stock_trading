@@ -3,7 +3,7 @@ from indicators import get_SMA,get_EMA,get_MACD,get_K_stochastic,get_D_of_K_stoc
 
 DATA_STOCK = r"apple_stock.csv"
 
-def load_data(path : str):
+def load_data(path):
     data = pd.read_csv(path, index_col=0)
     return data
 

@@ -65,18 +65,21 @@ def main_loop():
             print("Invalid input")
             continue
         show_results(labels, test_frame)
-        print(result)
+        print("Accuracy " + str(result))
         finish = raw_input('if you want to quit press "q"')
         if finish == "q":
             end = True;
 
 def show_results(labels, data_frame):
-    show_daily_result = raw_input('if you want to see the results for a exact period from the dataset press "s"')
+    show_daily_result = raw_input('if you want to save the results press "s"')
     if show_daily_result == "s":
-        with open("results.txt", "w") as result_file:
-            for i in range(data_frame.shape[0]):
-                if (i < len(labels)):
-                    result_file.write(str(data_frame.iloc[[i]]) + " PREDICTED ACTION: " + str(labels[i]) + "\n")
+        result_frame = pd.DataFrame(data_frame)
+        result_frame["PREDICTED ACTION"] = pd.Series(labels)
+        result_frame.to_csv("results.csv")
+        #with open("results.txt", "w") as result_file:
+         #   for i in range(data_frame.shape[0]):
+          #      if (i < len(labels)):
+           #         result_file.write(str(data_frame.iloc[[i]]) + " PREDICTED ACTION: " + str(labels[i]) + "\n")
 
 if __name__ == "__main__":
     main_loop()
