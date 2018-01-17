@@ -24,7 +24,7 @@ def train(train_frame, features):
     return dt
 
 
-def classify(test_frame, features, dt: DecisionTreeClassifier):
+def classify(test_frame, features, dt):
     y_test = test_frame["ACTION"]
     x_test = test_frame[features]
     prediction = dt.predict(x_test)
@@ -48,13 +48,13 @@ def main_loop():
     end = False
     while not end:
         try:
-            train_path = input('please type in the training dataset path:')
-            train_size = int(input('please type in the training dataset size (last n rows)'))
-            test_path = input('please type in the test dataset path:')
-            test_size = int(input('please type in the test dataset size (first n rows)'))
+            train_path = raw_input('please type in the training dataset path:')
+            train_size = int(raw_input('please type in the training dataset size (last n rows)'))
+            test_path = raw_input('please type in the test dataset path:')
+            test_size = int(raw_input('please type in the test dataset size (first n rows)'))
             train_frame = get_frame(train_path)
             test_frame = get_frame(test_path)
-            decision_tree = input('if you want to see the decision tree press "d"')
+            decision_tree = raw_input('if you want to see the decision tree press "d"')
             if decision_tree == "d":
                 display_tree = True
             else:
@@ -66,12 +66,12 @@ def main_loop():
             continue
         show_results(labels, test_frame)
         print(result)
-        finish = input('if you want to quit press "q"')
+        finish = raw_input('if you want to quit press "q"')
         if finish == "q":
             end = True;
 
 def show_results(labels, data_frame):
-    show_daily_result = input('if you want to see the results for a exact period from the dataset press "s"')
+    show_daily_result = raw_input('if you want to see the results for a exact period from the dataset press "s"')
     if show_daily_result == "s":
         with open("results.txt", "w") as result_file:
             for i in range(data_frame.shape[0]):

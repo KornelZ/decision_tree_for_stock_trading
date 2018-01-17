@@ -6,11 +6,11 @@ from attribute_binarization import Binarizer
 K_STOCHASTIC_INTERVAL = 20
 BOLLINGER_Q = 2
 
-def load_data(path : str):
+def load_data(path):
     data = pd.read_csv(path, index_col=0)
     return data
 
-def preprocess_data(path : str):
+def preprocess_data(path):
 
     data = load_data(path)
     macd_list = get_MACD(data["close"].tolist(),0,data["close"].shape[0])
