@@ -2,6 +2,7 @@ from data_processing import preprocess_data
 from data_labeling import label_matrix, get_code
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
 
 DATA_PATH = r"./datasets/Apple10years.csv"
 COLUMNS = ["MACD_SELL", "MACD_BUY", "EMA(C)", "EMA(V)",
@@ -26,13 +27,12 @@ def train(train_frame, features):
 def classify(test_frame, features, dt: DecisionTreeClassifier):
     y_test = test_frame["ACTION"]
     x_test = test_frame[features]
-    return dt.score(x_test, y_test)
+    prediction = dt.predict(x_test)
+    return prediction, accuracy_score(y_test,prediction)
 
 
-def main(train_path, train_size, test_path, test_size, display_tree=True):
-    train_frame = get_frame(train_path)
+def main(train_frame, train_size, test_frame, test_size, display_tree=True):
     df_train = train_frame.tail(train_size)
-    test_frame = get_frame(test_path)
     df_test = test_frame.head(test_size)
     features = list(df_train.columns[:7])
 
@@ -52,16 +52,31 @@ def main_loop():
             train_size = int(input('please type in the training dataset size (last n rows)'))
             test_path = input('please type in the test dataset path:')
             test_size = int(input('please type in the test dataset size (first n rows)'))
-            result = main(train_path, train_size, test_path, test_size)
+            train_frame = get_frame(train_path)
+            test_frame = get_frame(test_path)
+            decision_tree = input('if you want to see the decision tree press "d"')
+            if decision_tree == "d":
+                display_tree = True
+            else:
+                display_tree = False
+            labels, result = main(train_frame, train_size, test_frame, test_size, display_tree)
+
         except:
             print("Invalid input")
             continue
-
+        show_results(labels, test_frame)
         print(result)
         finish = input('if you want to quit press "q"')
         if finish == "q":
             end = True;
 
+def show_results(labels, data_frame):
+    show_daily_result = input('if you want to see the results for a exact period from the dataset press "s"')
+    if show_daily_result == "s":
+        with open("results.txt", "w") as result_file:
+            for i in range(data_frame.shape[0]):
+                if (i < len(labels)):
+                    result_file.write(str(data_frame.iloc[[i]]) + " PREDICTED ACTION: " + str(labels[i]) + "\n")
 
 if __name__ == "__main__":
     main_loop()
