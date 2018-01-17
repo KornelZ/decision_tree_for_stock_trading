@@ -3,7 +3,7 @@ from data_labeling import label_matrix, get_code
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 
-DATA_PATH = r"apple7years.csv"
+DATA_PATH = r"./datasets/Apple10years.csv"
 COLUMNS = ["MACD_SELL", "MACD_BUY", "EMA(C)", "EMA(V)",
            "K_SELL", "K_BUY", "BB_BUY", "BB_SELL", "ACTION"]
 TARGETS = ["BUY", "SELL", "NEUTRAL"]
