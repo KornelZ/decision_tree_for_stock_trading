@@ -1,0 +1,1 @@
+activate root & python algorithm_test.py
